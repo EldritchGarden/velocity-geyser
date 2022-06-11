@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Dev --
+# GEYSER_BUILD="latest"
+# -- Dev
+
+base_url="https://ci.opencollab.dev/job/GeyserMC/job/Geyser/job/master"
+
+if [ "${GEYSER_BUILD}" = "latest" ]; then
+    build="lastSuccessfulBuild"
+    build_num=$(latest_build geyser)
+else
+    build=${GEYSER_BUILD}
+    build_num=${GEYSER_BUILD}
+fi
+
+current_version geyser "${build_num}"
+
+download_url="${base_url}/${build}/artifact/bootstrap/velocity/target/Geyser-Velocity.jar"
+wget "${download_url}" -O Geyser-Velocity.jar
+
+exit $?

@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# return the latest build of the specified jar
+# i.e. 'latest_build velocity' will return the latest velocity build
+
+project=$(echo "${1}" | tr '[:upper:]' '[:lower:]')
+
+case ${project} in
+    velocity)
+        api_url="https://api.papermc.io/v2/projects/velocity/versions"
+        builds_url="${api_url}/${VELOCITY_VERSION}/builds"
+        build=$(curl -s "${builds_url}" | jq '[.["builds"][] | .build] | max')
+        ;;
+    geyser)
+        api_url="https://ci.opencollab.dev/job/GeyserMC/job/Geyser/job/master"
+        build=$(curl -s "${api_url}/lastSuccessfulBuild/api/json" | jq '.number')
+        ;;
+    floodgate)
+        api_url="https://ci.opencollab.dev/job/GeyserMC/job/Floodgate/job/master"
+        build=$(curl -s "${api_url}/lastSuccessfulBuild/api/json" | jq '.number')
+        ;;
+    *)
+        echo "Error, unkown project: ${project}"
+        exit 1
+esac
+
+echo "${build}"
+exit 0

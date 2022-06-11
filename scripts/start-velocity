@@ -1,0 +1,58 @@
+#!/bin/sh
+
+## determine current builds
+# version file created by ${current_versions}script
+if [ -f ${VERSION_FILE} ]; then
+    current_velocity="$(current_version velocity)"
+    current_geyser="$(current_version geyser)"
+    current_floodgate="$(current_version floodgate)"
+else
+    touch ${VERSION_FILE}
+    current_velocity="0"
+    current_geyser="0"
+    current_floodgate="0"
+fi
+
+## determine latest builds
+if [ "${VELOCITY_BUILD}" = "latest" ]; then
+    latest_velocity=$(latest_build velocity)
+else
+    latest_velocity=${VELOCITY_BUILD}
+fi
+
+if [ "${GEYSER_BUILD}" = "latest" ]; then
+    latest_geyser=$(latest_build geyser)
+else
+    latest_geyser=${GEYSER_BUILD}
+fi
+
+if [ "${FLOODGATE_BUILD}" = "latest" ]; then
+    latest_floodgate=$(latest_build floodgate)
+else
+    latest_floodgate=${FLOODGATE_BUILD}
+fi
+
+## update if needed
+# if an update fails, the file could get overwritten with
+# and empty file, so we exit if any update fails
+(
+    if [ $latest_velocity -gt $current_velocity ]; then
+        download_velocity || exit 10
+    fi
+
+    # create plugins dir if it doesnt exist
+    if ! [ -d plugins ]; then mkdir plugins; fi
+    cd plugins || exit 13
+
+    if [ $latest_geyser -gt $current_geyser ]; then
+        download_geyser || exit 11
+    fi
+    if [ $latest_floodgate -gt $current_floodgate ]; then
+        download_floodgate || exit 12
+    fi
+    exit 0
+) || exit $?
+
+## start velocity
+java -Xms${JAVA_MEMORY} -Xmx${JAVA_MEMORY} ${JAVA_FLAGS} \
+    -jar velocity-${VELOCITY_VERSION}.jar

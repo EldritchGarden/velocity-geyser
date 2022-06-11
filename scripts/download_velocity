@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Dev --
+# VELOCITY_VERSION="3.1.1"
+# VELOCITY_BUILD="latest"
+# -- Dev
+
+api_url="https://api.papermc.io"
+builds_url="${api_url}/v2/projects/velocity/versions/${VELOCITY_VERSION}/builds"
+
+if [ "${VELOCITY_BUILD}" = "latest" ]; then
+    build=$(latest_build velocity)
+else
+    build=${VELOCITY_BUILD}
+fi
+
+file_name="velocity-${VELOCITY_VERSION}-${build}.jar"
+download_url="${builds_url}/${build}/downloads/${file_name}"
+
+current_version velocity "${build}"
+
+wget "${download_url}" -O "velocity-${VELOCITY_VERSION}.jar"
+
+exit $?

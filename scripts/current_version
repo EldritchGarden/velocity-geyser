@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# read: current_version velocity
+# write: current_version velocity 1120
+
+if ! [ -f ${VERSION_FILE} ]; then
+    echo "No Version File!"
+    exit 1
+fi
+
+case "${1}" in
+    velocity)
+        ;;
+    geyser)
+        ;;
+    floodgate)
+        ;;
+    *)
+        echo "Error: invalid key ${1}"
+        exit 2
+esac
+
+if [ -z "${2}" ]; then
+    cat ${VERSION_FILE} | awk '/^'"${1}"'/ {print $3}'
+else
+    # remove existing line, then append new line
+    sed -i "/^${1}/d" ${VERSION_FILE}
+    echo "${1} build ${2}" >> ${VERSION_FILE}
+fi

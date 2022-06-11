@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Dev --
+# FLOODGATE_BUILD="latest"
+# -- Dev
+
+base_url="https://ci.opencollab.dev/job/GeyserMC/job/Floodgate/job/master"
+
+if [ "${FLOODGATE_BUILD}" = "latest" ]; then
+    build="lastSuccessfulBuild"
+    build_num=$(latest_build floodgate)
+else
+    build=${FLOODGATE_BUILD}
+    build_num=${FLOODGATE_BUILD}
+fi
+
+current_version floodgate "${build_num}"
+
+download_url="${base_url}/${build}/artifact/velocity/target/floodgate-velocity.jar"
+wget "${download_url}" -O floodgate-velocity.jar
+
+exit $?
