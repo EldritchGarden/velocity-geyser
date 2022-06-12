@@ -27,8 +27,8 @@ RUN chmod 755 /usr/local/bin/*
 # jq and curl are needed for downloading files
 RUN apk add jq curl
 
-RUN addgroup -S velocity && \
-    adduser -S velocity -G velocity && \
+RUN addgroup -g 1000 -S velocity && \
+    adduser -u 1000 -S velocity && \
     chown velocity:velocity /data
 
 USER velocity

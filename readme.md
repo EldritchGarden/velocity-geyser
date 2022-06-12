@@ -8,7 +8,9 @@ downloaded when the container starts, and will automatically update when
 new builds are released.
 
 #### DockerHub
-I will add a link here once the image is up on Docker Hub
+[Docker Hub](https://hub.docker.com/repository/docker/eldritchgarden/velocity-geyser)
+
+`docker pull eldritchgarden/velocity-geyser`
 
 #### Building
 To build from source just clone the repository and run
