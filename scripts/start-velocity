@@ -36,7 +36,7 @@ fi
 # if an update fails, the file could get overwritten with
 # and empty file, so we exit if any update fails
 (
-    if [ $latest_velocity -gt $current_velocity ]; then
+    if [ $latest_velocity -ne $current_velocity ]; then
         download_velocity || exit 10
     fi
 
@@ -44,15 +44,15 @@ fi
     if ! [ -d plugins ]; then mkdir plugins; fi
     cd plugins || exit 13
 
-    if [ $latest_geyser -gt $current_geyser ]; then
+    if [ $latest_geyser -ne $current_geyser ]; then
         download_geyser || exit 11
     fi
-    if [ $latest_floodgate -gt $current_floodgate ]; then
+    if [ $latest_floodgate -ne $current_floodgate ]; then
         download_floodgate || exit 12
     fi
     exit 0
 ) || exit $?
 
 ## start velocity
-java -Xms${JAVA_MEMORY} -Xmx${JAVA_MEMORY} ${JAVA_FLAGS} \
+exec java -Xms${JAVA_MEMORY} -Xmx${JAVA_MEMORY} ${JAVA_FLAGS} \
     -jar velocity-${VELOCITY_VERSION}.jar
